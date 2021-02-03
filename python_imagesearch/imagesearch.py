@@ -28,10 +28,10 @@ def region_grabber(region):
     if is_retina: region = [n * 2 for n in region]
     x1 = region[0]
     y1 = region[1]
-    width = region[2] - x1
-    height = region[3] - y1
+    x2 = region[2]
+    y2 = region[3]
 
-    region = x1, y1, width, height
+    region = x1, y1, x2, y2
     with mss.mss() as sct:
         return sct.grab(region)
 
@@ -70,9 +70,10 @@ def imagesearcharea(image, x1, y1, x2, y2, precision=0.8, im=None):
 
     res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+    loc = [max_loc[0] + x1, max_loc[1] + y1]
     if max_val < precision:
         return [-1, -1]
-    return max_loc
+    return loc
 
 
 '''
